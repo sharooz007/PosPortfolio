@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sharooz — Builds</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0A0A0A;
+      --surface: #111111;
+      --border: #1E1E1E;
+      --dot: #222222;
+      --text: #FAFAFA;
+      --muted: #6B6B6B;
+      --accent: #C8FF57;
+      --accent-dim: rgba(200, 255, 87, 0.08);
+      --accent-border: rgba(200, 255, 87, 0.2);
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Dotted background ── */
+    .dot-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image: radial-gradient(circle, var(--dot) 1px, transparent 1px);
+      background-size: 28px 28px;
+      pointer-events: none;
+      transition: opacity 0.6s ease;
+    }
+    /* Vignette overlay */
+    .dot-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, var(--bg) 100%);
+    }
+
+    /* ── Layout ── */
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    /* ── Header ── */
+    header {
+      position: relative;
+      z-index: 1;
+      padding: 48px 40px 0;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .header-logo {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .header-logo span {
+      color: var(--accent);
+    }
+    .header-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .status-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 120px 0 100px;
+      text-align: center;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 7vw, 88px);
+      font-weight: 700;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--accent);
+    }
+    .hero-sub {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border) 20%, var(--border) 80%, transparent);
+      margin: 0;
+    }
+
+    /* ── POS Section ── */
+    .pos-section {
+      padding: 100px 0;
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .pos-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-header {
+      margin-bottom: 56px;
+    }
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid var(--accent-border);
+      padding: 6px 12px;
+      border-radius: 4px;
+      margin-bottom: 28px;
+    }
+    .section-number {
+      color: var(--muted);
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    .section-desc {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 560px;
+    }
+
+    /* ── Tech pills ── */
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .tech-pill {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 3px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Carousel ── */
+    .carousel-wrap {
+      position: relative;
+      margin-top: 48px;
+    }
+    .carousel {
+      overflow: hidden;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      position: relative;
+    }
+    /* Fake browser chrome */
+    .browser-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      background: #0D0D0D;
+    }
+    .browser-dots {
+      display: flex; gap: 6px;
+    }
+    .browser-dots span {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .browser-dots span:nth-child(1) { background: #FF5F57; }
+    .browser-dots span:nth-child(2) { background: #FEBC2E; }
+    .browser-dots span:nth-child(3) { background: #28C840; }
+    .browser-url {
+      flex: 1;
+      height: 26px;
+      background: var(--border);
+      border-radius: 4px;
+      margin-left: 12px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .carousel-track-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+    .carousel-track {
+      display: flex;
+      transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .carousel-slide {
+      min-width: 100%;
+      aspect-ratio: 16/9;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0D0D0D;
+    }
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    /* Placeholder for when no image is set */
+    .slide-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      color: var(--muted);
+    }
+    .slide-placeholder svg {
+      opacity: 0.25;
+    }
+    .slide-placeholder span {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.1em;
+    }
+
+    /* Carousel controls */
+    .carousel-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+    .carousel-dots {
+      display: flex;
+      gap: 8px;
+    }
+    .carousel-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      border: none;
+      padding: 0;
+      transition: all 0.2s ease;
+    }
+    .carousel-dot.active {
+      background: var(--accent);
+      width: 20px;
+      border-radius: 3px;
+    }
+    .carousel-arrows {
+      display: flex;
+      gap: 8px;
+    }
+    .carousel-btn {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .carousel-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+    .carousel-btn:disabled {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+    .carousel-btn svg {
+      width: 16px; height: 16px;
+    }
+
+    /* Slide counter */
+    .slide-counter {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 60px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+    }
+    .footer-text {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .footer-text span { color: var(--accent); }
+
+    /* ── Glow on active section ── */
+    .glow-anchor {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(200,255,87,0.04) 0%, transparent 70%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .pos-section.visible .glow-anchor { opacity: 1; }
+
+
+
+
+    /* ── Creative works section ── */
+    .creative-divider {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 64px;
+    }
+    .creative-divider::before,
+    .creative-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--border) 50%);
+    }
+    .creative-divider::after {
+      background: linear-gradient(to left, transparent, var(--border) 50%);
+    }
+    .creative-divider-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .creative-section {
+      max-width: 640px;
+    }
+    .creative-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+    .creative-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 3.5vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    .creative-desc {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .creative-disclaimer {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 14px 16px;
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.02);
+      margin-bottom: 32px;
+      color: #555;
+    }
+    .creative-disclaimer span {
+      font-size: 12px;
+      line-height: 1.6;
+      font-family: var(--font-mono);
+      letter-spacing: 0.02em;
+    }
+    .creative-disclaimer svg {
+      color: #444;
+    }
+    .creative-link-card {
+      display: block;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface);
+      transition: border-color 0.2s ease, background 0.2s ease;
+      overflow: hidden;
+    }
+    .creative-link-card:hover {
+      border-color: #333;
+      background: #161616;
+    }
+    .creative-link-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+    }
+    .creative-link-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .creative-link-label {
+      font-family: var(--font-display);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .creative-link-url {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .creative-link-arrow {
+      color: var(--muted);
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .creative-link-card:hover .creative-link-arrow {
+      color: var(--text);
+      transform: translate(2px, -2px);
+    }
+
+
+    /* ── Mobile mockup ── */
+    .mobile-mockup-wrap {
+      margin-top: 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
+    .mobile-mockup {
+      position: relative;
+      width: 300px;
+    }
+    .phone-shell {
+      position: relative;
+      background: #1a1a1a;
+      border-radius: 44px;
+      padding: 14px 10px;
+      box-shadow:
+        0 0 0 1px #333,
+        0 0 0 3px #111,
+        0 32px 80px rgba(0,0,0,0.6),
+        inset 0 0 0 1px #2a2a2a;
+    }
+    .phone-notch {
+      width: 90px;
+      height: 26px;
+      background: #111;
+      border-radius: 0 0 18px 18px;
+      margin: 0 auto 8px;
+      position: relative;
+      z-index: 2;
+    }
+    .phone-notch::after {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #1f1f1f;
+      box-shadow: inset 0 0 0 2px #0a0a0a;
+    }
+    .phone-screen {
+      border-radius: 30px;
+      overflow: hidden;
+      background: #F6EDDC;
+      height: 560px;
+      position: relative;
+    }
+    .phone-screen iframe {
+      width: 375px;
+      height: 812px;
+      border: none;
+      transform: scale(0.747);
+      transform-origin: top left;
+      pointer-events: none;
+    }
+    .mockup-actions {
+      display: flex;
+      justify-content: center;
+    }
+
+    /* ── Site preview card ── */
+    .site-preview-wrap { margin-top: 48px; }
+    .site-preview-inner {
+      position: relative;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: #0D0D0D;
+    }
+    .site-preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      filter: brightness(0.85);
+      transition: filter 0.3s ease, transform 0.5s ease;
+    }
+    .site-preview-inner:hover .site-preview-img {
+      filter: brightness(0.6);
+      transform: scale(1.02);
+    }
+    .site-preview-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .site-preview-inner:hover .site-preview-overlay { opacity: 1; }
+    .site-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: var(--accent);
+      color: #000;
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 8px;
+      text-decoration: none;
+      letter-spacing: -0.01em;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .site-link-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(200,255,87,0.3);
+    }
+
+
+    .site-screenshot-placeholder {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: 
+        radial-gradient(ellipse 60% 50% at 50% 50%, rgba(200,255,87,0.04) 0%, transparent 70%),
+        #0D0D0D;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .ssp-url {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: #2a2a2a;
+      letter-spacing: 0.08em;
+    }
+    .site-preview-overlay--always {
+      opacity: 1 !important;
+    }
+    .site-preview-inner:hover .site-preview-overlay--always {
+      opacity: 1 !important;
+    }
+
+    /* ── Status note ── */
+    .status-note {
+      margin-top: 28px;
+      padding: 18px 20px;
+      border: 1px solid var(--accent-border);
+      border-radius: 8px;
+      background: var(--accent-dim);
+      max-width: 600px;
+    }
+    .status-note--amber {
+      border-color: rgba(255, 184, 77, 0.2);
+      background: rgba(255, 184, 77, 0.05);
+    }
+    .status-note-indicator {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .sn-bar {
+      flex: 1;
+      height: 3px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .sn-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+    }
+    .sn-fill--amber { background: #FFB84D; }
+    .sn-pct {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent);
+      white-space: nowrap;
+      letter-spacing: 0.05em;
+    }
+    .sn-text {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    @media (max-width: 640px) {
+      .page, header, footer { padding-left: 20px; padding-right: 20px; }
+      .hero { padding: 80px 0 60px; }
+      .pos-section { padding: 60px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dot-bg"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-logo"><span>SHZ</span> / builds</div>
+    <div class="header-status">
+      <div class="status-dot"></div>
+      2 POS · 2 websites coming
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="page">
+    <section class="hero">
+      <p class="hero-eyebrow">Sharooz — Builds</p>
+      <h1 class="hero-title">I build things<br/>that <em>work.</em></h1>
+      <p class="hero-sub">POS systems, web apps, and tools — designed and built from the ground up. Every project below is something real, for a real client.</p>
+    </section>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- POS 1: YSM Billing -->
+  <div class="page">
+    <section class="pos-section" id="pos1">
+      <div class="glow-anchor"></div>
+      <div class="section-header">
+        <div class="section-tag">
+          <span class="section-number">01 /</span>
+          Salon & Clothing POS
+        </div>
+        <h2 class="section-title">YSM Billing</h2>
+        <p class="section-desc">
+          A dual-mode point of sale for a real shop — handling both salon services and clothing retail under one roof. Built with a clean split between billing, inventory, and partner reporting, with role-based PIN auth so staff only touch what they need to.
+        </p>
+        <div class="tech-stack">
+          <span class="tech-pill">Next.js</span>
+          <span class="tech-pill">TypeScript</span>
+          <span class="tech-pill">Tailwind</span>
+          <span class="tech-pill">Radix UI</span>
+          <span class="tech-pill">SQLite</span>
+          <span class="tech-pill">Drizzle ORM</span>
+          <span class="tech-pill">Supabase</span>
+        </div>
+        <div class="status-note">
+          <div class="status-note-indicator">
+            <div class="sn-bar"><div class="sn-fill" style="width:90%"></div></div>
+            <span class="sn-pct">90%</span>
+          </div>
+          <p class="sn-text">Core system is complete and stable. A final round of UI polish is left — spacing, edge-case states, minor refinements. Awaiting client sign-off to wrap that up and ship.</p>
+        </div>
+      </div>
+
+      <!-- Carousel 1 -->
+      <div class="carousel-wrap">
+        <div class="carousel" id="carousel1">
+          <div class="browser-bar">
+            <div class="browser-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="browser-url">localhost:3000 — YSM Billing</div>
+          </div>
+          <div class="carousel-track-wrap">
+            <div class="carousel-track" id="track1">
+              <!-- Add your screenshots here as <img> tags inside .carousel-slide divs -->
+              <!-- Example: <div class="carousel-slide"><img src="screenshots/ysm-1.png" alt="YSM Dashboard" /></div> -->
+              <div class="carousel-slide">
+                <div class="slide-placeholder">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+                  </svg>
+                  <span>ADD SCREENSHOT — YSM DASHBOARD</span>
+                </div>
+              </div>
+              <div class="carousel-slide">
+                <div class="slide-placeholder">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                  <span>ADD SCREENSHOT — BILLING VIEW</span>
+                </div>
+              </div>
+              <div class="carousel-slide">
+                <div class="slide-placeholder">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                  </svg>
+                  <span>ADD SCREENSHOT — INVENTORY</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-controls">
+          <div class="slide-counter" id="counter1">1 / 3</div>
+          <div class="carousel-dots" id="dots1"></div>
+          <div class="carousel-arrows">
+            <button class="carousel-btn" id="prev1" onclick="slide('1', -1)" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-btn" id="next1" onclick="slide('1', 1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- POS 2: Spice Shop -->
+  <div class="page">
+    <section class="pos-section" id="pos2">
+      <div class="glow-anchor"></div>
+      <div class="section-header">
+        <div class="section-tag">
+          <span class="section-number">02 /</span>
+          Spice & Grocery POS
+        </div>
+        <h2 class="section-title">Spice Shop POS</h2>
+        <p class="section-desc">
+          An offline-first desktop POS built on Electron, purpose-built for a spice and grocery retail operation. Handles both retail and wholesale billing modes, full inventory management, and barcode label printing — all without needing internet. A Supabase mirror syncs up when online for owner reporting.
+        </p>
+        <div class="tech-stack">
+          <span class="tech-pill">Electron</span>
+          <span class="tech-pill">SQLite</span>
+          <span class="tech-pill">Tailwind v4</span>
+          <span class="tech-pill">Offline-first</span>
+          <span class="tech-pill">Barcode Print</span>
+          <span class="tech-pill">Supabase</span>
+        </div>
+        <div class="status-note status-note--amber">
+          <div class="status-note-indicator">
+            <div class="sn-bar"><div class="sn-fill sn-fill--amber" style="width:60%"></div></div>
+            <span class="sn-pct" style="color: #FFB84D;">Active iteration</span>
+          </div>
+          <p class="sn-text">The working layer is complete — billing, inventory, wholesale/retail modes, barcode printing, offline sync. Three prototype packages have been shipped to the client for testing. Workflow and feature set are still being finalized through client feedback, so UI polish (contrast, colour palette, visual refinement) is intentionally held until the technical layer is locked. No point polishing what might still move.</p>
+        </div>
+      </div>
+
+      <!-- Carousel 2 -->
+      <div class="carousel-wrap">
+        <div class="carousel" id="carousel2">
+          <div class="browser-bar">
+            <div class="browser-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="browser-url" style="font-family: var(--font-mono); font-size: 11px;">Spice Shop POS — Desktop App</div>
+          </div>
+          <div class="carousel-track-wrap">
+            <div class="carousel-track" id="track2">
+              <!-- Add your screenshots here -->
+              <div class="carousel-slide">
+                <div class="slide-placeholder">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+                  </svg>
+                  <span>ADD SCREENSHOT — POS MAIN SCREEN</span>
+                </div>
+              </div>
+              <div class="carousel-slide">
+                <div class="slide-placeholder">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/>
+                  </svg>
+                  <span>ADD SCREENSHOT — INVENTORY</span>
+                </div>
+              </div>
+              <div class="carousel-slide">
+                <div class="slide-placeholder">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><rect x="7" y="7" width="3" height="9"/><rect x="14" y="7" width="3" height="5"/>
+                  </svg>
+                  <span>ADD SCREENSHOT — BARCODE / BILLING</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-controls">
+          <div class="slide-counter" id="counter2">1 / 3</div>
+          <div class="carousel-dots" id="dots2"></div>
+          <div class="carousel-arrows">
+            <button class="carousel-btn" id="prev2" onclick="slide('2', -1)" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="carousel-btn" id="next2" onclick="slide('2', 1)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="divider"></div>
+
+  <!-- Website 1: Envylash -->
+  <div class="page">
+    <section class="pos-section" id="web1">
+      <div class="glow-anchor"></div>
+      <div class="section-header">
+        <div class="section-tag">
+          <span class="section-number">03 /</span>
+          Skincare E-commerce
+        </div>
+        <h2 class="section-title">Envylash</h2>
+        <p class="section-desc">
+          A product website for a skincare brand — built for a friend launching their first product, an overnight skin-lightening night cream. Clean, premium aesthetic with a soft silk-and-gold visual identity that matches the brand. Full pages: home, product, about, contact, and terms. Social links and WhatsApp contact integrated.
+        </p>
+        <div class="tech-stack">
+          <span class="tech-pill">Next.js</span>
+          <span class="tech-pill">Vercel</span>
+          <span class="tech-pill">Responsive</span>
+          <span class="tech-pill">Single product</span>
+          <span class="tech-pill">WhatsApp CTA</span>
+        </div>
+        <div class="status-note status-note--amber">
+          <div class="status-note-indicator">
+            <div class="sn-bar"><div class="sn-fill sn-fill--amber" style="width:75%"></div></div>
+            <span class="sn-pct" style="color: #FFB84D;">Pre-launch</span>
+          </div>
+          <p class="sn-text">Site is live on Vercel and working end-to-end. Waiting on the client to finalise the launch — content, copy, and visuals will get a final polish pass before going public.</p>
+        </div>
+      </div>
+
+      <!-- Live preview card instead of carousel -->
+      <div class="site-preview-wrap">
+        <div class="carousel" style="overflow:hidden;">
+          <div class="browser-bar">
+            <div class="browser-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="browser-url">envylash.vercel.app</div>
+          </div>
+          <div class="site-preview-inner">
+            <div class="site-screenshot-placeholder">
+              <span class="ssp-url">envylash.vercel.app</span>
+            </div>
+            <div class="site-preview-overlay site-preview-overlay--always">
+              <a href="https://envylash.vercel.app" target="_blank" rel="noopener" class="site-link-btn">
+                View live site
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="divider"></div>
+
+  <!-- Website 2: YSM Website -->
+  <div class="page">
+    <section class="pos-section" id="web2">
+      <div class="glow-anchor"></div>
+      <div class="section-header">
+        <div class="section-tag">
+          <span class="section-number">04 /</span>
+          Clothing Store Website
+        </div>
+        <h2 class="section-title">YSM Cloths & Cuts</h2>
+        <p class="section-desc">
+          A storefront website for YSM — the same shop the billing POS was built for. The logo is also mine, designed from scratch for the brand. Early stage: three sections designed so far, with the visual direction established. The plan is a full clothing showcase with a custom admin panel, so the shop owner can add, edit, and remove items directly from the site without touching any code.
+        </p>
+        <div class="tech-stack">
+          <span class="tech-pill">Next.js</span>
+          <span class="tech-pill">Admin panel</span>
+          <span class="tech-pill">Auth</span>
+          <span class="tech-pill">CMS-style backend</span>
+          <span class="tech-pill">Clothing catalog</span>
+        </div>
+        <div class="status-note" style="border-color: rgba(120,120,120,0.25); background: rgba(255,255,255,0.03);">
+          <div class="status-note-indicator">
+            <div class="sn-bar"><div class="sn-fill" style="width:10%; background: #666;"></div></div>
+            <span class="sn-pct" style="color: #666;">~10% — Alpha</span>
+          </div>
+          <p class="sn-text">Very early stage. Three sections exist but nothing is finalised — fonts, colours, visual direction are all still open. The bulk of the work ahead is the full layout and the admin backend: a login-protected panel where the owner can manage the clothing catalog without touching code. Link available once it's further along.</p>
+        </div>
+      </div>
+
+      <!-- Site preview card -->
+      <div class="site-preview-wrap">
+        <div class="carousel" style="overflow:hidden;">
+          <div class="browser-bar">
+            <div class="browser-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="browser-url">ysmwebsite.vercel.app</div>
+          </div>
+          <div class="site-preview-inner">
+            <div class="site-screenshot-placeholder">
+              <span class="ssp-url">ysmwebsite.vercel.app</span>
+            </div>
+            <div class="site-preview-overlay site-preview-overlay--always">
+              <a href="https://ysmwebsite.vercel.app" target="_blank" rel="noopener" class="site-link-btn">
+                View live site
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+  <div class="divider"></div>
+
+  <!-- Website 3: Wedding Invitation -->
+  <div class="page">
+    <section class="pos-section" id="web3">
+      <div class="glow-anchor"></div>
+      <div class="section-header">
+        <div class="section-tag">
+          <span class="section-number">05 /</span>
+          Wedding Invitation
+        </div>
+        <h2 class="section-title">Haseeb & Thasneem</h2>
+        <p class="section-desc">
+          A mobile-first wedding invitation site built for a friend — designed to be shared as a link instead of a paper card. Started with an AI-assisted base, then extended with custom floral SVGs, scroll-triggered text reveals, and layered animations to give it the feel of a real invitation unfolding. July 12, 2026.
+        </p>
+        <div class="tech-stack">
+          <span class="tech-pill">Mobile-first</span>
+          <span class="tech-pill">Custom SVGs</span>
+          <span class="tech-pill">Scroll animations</span>
+          <span class="tech-pill">Text reveal</span>
+          <span class="tech-pill">Vercel</span>
+        </div>
+        <div class="status-note" style="border-color: rgba(200,255,87,0.2); background: rgba(200,255,87,0.05);">
+          <div class="status-note-indicator">
+            <div class="sn-bar"><div class="sn-fill" style="width:100%;"></div></div>
+            <span class="sn-pct">Live</span>
+          </div>
+          <p class="sn-text">Shipped and being shared with guests. The wedding is July 12, 2026 — link is already in the wild.</p>
+        </div>
+      </div>
+
+      <!-- Mobile mockup -->
+      <div class="mobile-mockup-wrap">
+        <div class="mobile-mockup">
+          <div class="phone-shell">
+            <div class="phone-notch"></div>
+            <div class="phone-screen">
+              <iframe
+                src="https://haseebwedsthasneem.vercel.app/"
+                title="Haseeb & Thasneem Wedding Invitation"
+                scrolling="yes"
+                loading="lazy"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+        <div class="mockup-actions">
+          <a href="https://haseebwedsthasneem.vercel.app/" target="_blank" rel="noopener" class="site-link-btn">
+            Open invitation
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+
+  <!-- Creative Works — separate from project portfolio -->
+  <div style="height: 80px;"></div>
+  <div style="position:relative; z-index:1; max-width:1100px; margin: 0 auto; padding: 0 40px;">
+    <div class="creative-divider">
+      <span class="creative-divider-label">Something else entirely</span>
+    </div>
+
+    <div class="creative-section">
+      <div class="creative-header">
+        <p class="creative-eyebrow">AI Generation & Creative Direction</p>
+        <h2 class="creative-title">Design work.</h2>
+        <p class="creative-desc">
+          Separate from everything above — this is where the AI image and video generation work lives. Packshots, cinematic stills, product mockups, brand visuals. Built fast, iterated fast. The page itself was thrown together in ~10 minutes; the work inside it wasn't.
+        </p>
+        <div class="creative-disclaimer">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0; margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>This is an unpolished showcase page — built in one shot with AI to get the work out quickly. The portfolio page you're on right now is the real one. Treat that link as a mood board, not a product.</span>
+        </div>
+      </div>
+
+      <a href="https://sharoozworks.vercel.app/" target="_blank" rel="noopener" class="creative-link-card">
+        <div class="creative-link-inner">
+          <div class="creative-link-left">
+            <span class="creative-link-label">View creative works</span>
+            <span class="creative-link-url">sharoozworks.vercel.app</span>
+          </div>
+          <div class="creative-link-arrow">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div style="height: 80px;"></div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-text">Built by <span>Sharooz</span></div>
+    <div class="footer-text" style="font-size:11px;">2 POS systems · 3 websites</div>
+  </footer>
+
+  <script>
+    // ── Carousel state ──
+    const state = {
+      '1': { current: 0 },
+      '2': { current: 0 }
+    };
+
+    function getSlides(id) {
+      return document.querySelectorAll(`#track${id} .carousel-slide`);
+    }
+
+    function initCarousel(id) {
+      const slides = getSlides(id);
+      const dotsContainer = document.getElementById(`dots${id}`);
+      dotsContainer.innerHTML = '';
+      slides.forEach((_, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+        btn.onclick = () => goTo(id, i);
+        dotsContainer.appendChild(btn);
+      });
+      updateCarousel(id);
+    }
+
+    function goTo(id, index) {
+      const slides = getSlides(id);
+      state[id].current = Math.max(0, Math.min(index, slides.length - 1));
+      updateCarousel(id);
+    }
+
+    function slide(id, dir) {
+      const slides = getSlides(id);
+      goTo(id, state[id].current + dir);
+    }
+
+    function updateCarousel(id) {
+      const slides = getSlides(id);
+      const cur = state[id].current;
+      const total = slides.length;
+
+      document.getElementById(`track${id}`).style.transform = `translateX(-${cur * 100}%)`;
+      document.getElementById(`counter${id}`).textContent = `${cur + 1} / ${total}`;
+
+      document.querySelectorAll(`#dots${id} .carousel-dot`).forEach((d, i) => {
+        d.classList.toggle('active', i === cur);
+      });
+
+      const prevBtn = document.getElementById(`prev${id}`);
+      const nextBtn = document.getElementById(`next${id}`);
+      if (prevBtn) prevBtn.disabled = cur === 0;
+      if (nextBtn) nextBtn.disabled = cur === total - 1;
+    }
+
+    // ── Touch / swipe support ──
+    function addSwipe(id) {
+      const track = document.getElementById(`track${id}`).parentElement;
+      let startX = 0;
+      track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+      track.addEventListener('touchend', e => {
+        const dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 40) slide(id, dx < 0 ? 1 : -1);
+      }, { passive: true });
+    }
+
+    // ── Scroll reveal ──
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.pos-section').forEach(s => observer.observe(s));
+
+    // ── Init ──
+    initCarousel('1');
+    initCarousel('2');
+    addSwipe('1');
+    addSwipe('2');
+  </script>
+</body>
+</html>
