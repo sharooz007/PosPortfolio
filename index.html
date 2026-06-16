@@ -90,6 +90,15 @@
       letter-spacing: 0.05em;
     }
     .header-logo span { color: var(--accent); }
+    .header-email {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: color 0.2s ease;
+    }
+    .header-email:hover { color: var(--accent); }
     .header-status {
       display: flex;
       align-items: center;
@@ -775,6 +784,7 @@
   <!-- Header -->
   <header>
     <div class="header-logo"><span>SHZ</span> / builds</div>
+    <a href="mailto:sharooz7717@gmail.com" class="header-email">sharooz7717@gmail.com</a>
   </header>
 
   <!-- Hero -->
