@@ -36,7 +36,7 @@
       color: var(--text);
       font-family: var(--font-body);
       min-height: 100vh;
-      overflow-x: hidden;
+      overflow-x: clip;
     }
 
     /* Directional emerald ambient — single off-center light source */
@@ -223,6 +223,7 @@
     .pos-section {
       padding: 100px 0;
       position: relative;
+      overflow: hidden;
     }
 
     /* JS scroll-reveal — opt-in so content is never gated */
